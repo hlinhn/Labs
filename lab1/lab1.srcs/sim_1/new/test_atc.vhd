@@ -66,11 +66,11 @@ begin
     sim_process: process
     begin
         req <= '0'; wait for (3 * clk_period);
-        plane<="000"; req <= '1'; wait for (3 * clk_period + clk_period_1hz); 
-        req <= '0'; wait for (2 * clk_period_1hz); --1 --test reset(light)
+        plane<="000"; req <= '1'; wait for (3 * clk_period); 
+        req <= '0'; wait for (3 * clk_period_1hz); --1 --test reset(light)
         
-        plane<="000"; req <= '1'; wait for (3 * clk_period + 0.5 * clk_period_1hz); 
-        req <= '0'; wait for (0.5 * clk_period_1hz); --1 --test 3s(light)
+        plane<="000"; req <= '1'; wait for (3 * clk_period); 
+        req <= '0'; wait for (1 * clk_period_1hz); --1 --test 3s(light)
         
         plane<="000"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (2 * clk_period_1hz); --0 --test 3s(light)
@@ -98,6 +98,9 @@ begin
         
         plane<="000"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (3 * clk_period_1hz); --0 --test (light-light)
+        
+        plane <= "000"; req <= '1'; wait for (4 * clk_period_1hz);
+        req <= '0';        
         wait; 
     end process;
 end Behavioral;

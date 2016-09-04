@@ -34,8 +34,8 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity debounce is
     Port ( press : in STD_LOGIC;
            refined_press : out STD_LOGIC;
-           clk : in STD_LOGIC;
-           clk_slow : in STD_LOGIC);
+           clk : in STD_LOGIC
+            );
 end debounce;
 
 architecture Behavioral of debounce is
@@ -44,20 +44,18 @@ begin
     process(clk)
     begin
         if(clk'event and clk='1') then
-            if(clk_slow = '1') then
-                if (press = '1') then
-                    if(count /= 10) then
-                        count <= count + 1;
-                    end if;
-                else
-                    count <= (others=>'0');
+            if (press = '1') then
+                if(count /= 10) then
+                    count <= count + 1;
                 end if;
-        
-                if (count = 10) then
-                    refined_press <= '1';
-                else
-                    refined_press <= '0';
-                end if;
+            else
+                count <= (others=>'0');
+            end if;
+    
+            if (count = 10) then
+                refined_press <= '1';
+            else
+                refined_press <= '0';
             end if;
         end if;
     end process;

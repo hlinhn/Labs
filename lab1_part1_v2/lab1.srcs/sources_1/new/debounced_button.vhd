@@ -55,8 +55,8 @@ architecture Behavioral of debounced_button is
     component debounce
         Port ( press : in STD_LOGIC;
                refined_press : out STD_LOGIC;
-               clk : in STD_LOGIC;
-               clk_slow : in STD_LOGIC);
+               clk : in STD_LOGIC
+              );
     end component;
     
     component clk_filter
@@ -73,61 +73,52 @@ architecture Behavioral of debounced_button is
            dir : out STD_LOGIC);
     end component;
     
-    signal clk_slow1,debounced_press_button_count,debounced_press_button_mode,debounced_press_button_tick : STD_LOGIC :='0';
-    
-begin
-
+    signal clk_slow1,debounced_press_button_count,debounced_press_button_mode,debounced_press_button_tick : STD_LOGIC :='0';    
+begin     
     clock_divider1 : clock_divider port map(
-            clk => clk,
-            clk_slow => clk_slow1
-        );
-        
+        clk => clk,
+        clk_slow => clk_slow1
+    );
+    
     button_count : debounce port map(
-            press=>raw_press_button_count,
-            refined_press=>debounced_press_button_count,
-            clk=>clk,
-            clk_slow => clk_slow1
-        );
-        
+        press=>raw_press_button_count,
+        refined_press=>debounced_press_button_count,
+        clk=>clk
+    );
+    
     button_load : debounce port map(
-            press=>raw_press_button_load,
-            refined_press=>debounced_press_button_load,
-            clk=>clk,
-            clk_slow => clk_slow1
-        );
+        press=>raw_press_button_load,
+        refined_press=>debounced_press_button_load,
+        clk=>clk
+    );
     button_mode : debounce port map(
-                    press=>raw_press_button_mode,
-                    refined_press=>debounced_press_button_mode,
-                    clk=>clk,
-                    clk_slow => clk_slow1
-        );
+        press=>raw_press_button_mode,
+        refined_press=>debounced_press_button_mode,
+        clk=>clk
+    );
+        
+    button_tick : debounce port map(
+       press=>raw_press_button_tick,
+       refined_press=>debounced_press_button_tick,
+       clk=>clk
+    );
+    
+    tick_PB : clk_filter port map(
+       btn => debounced_press_button_tick,
+       clk => clk,
+       filtered_btn => one_pulse_debounced_press_button_tick                      
+    );
+    
+    count_PB : toggle_button port map(
+        pressed => debounced_press_button_count,
+        clk => clk,
+        dir => count_dir_toggle_debounced_press_button_count
+    );            
                 
-     button_tick : debounce port map(
-                       press=>raw_press_button_tick,
-                       refined_press=>debounced_press_button_tick,
-                       clk=>clk,
-                       clk_slow => clk_slow1
-       );
-       
-       tick_PB : clk_filter port map(
-                       btn => debounced_press_button_tick,
-                       clk => clk,
-                       filtered_btn => one_pulse_debounced_press_button_tick
-                      
-                   );
-       
-          count_PB : toggle_button port map(
-                        pressed => debounced_press_button_count,
-                        clk => clk,
-                        dir => count_dir_toggle_debounced_press_button_count
-                    );
-                    
-                        
-                        mode_PB : toggle_button port map(
-                                pressed => debounced_press_button_mode,
-                                clk => clk,
-                                dir => mode_dir_toggle_debounced_press_button_mode
-                            );
-                            
-       
+    mode_PB : toggle_button port map(
+        pressed => debounced_press_button_mode,
+        clk => clk,
+        dir => mode_dir_toggle_debounced_press_button_mode
+    );                            
+   
 end Behavioral;

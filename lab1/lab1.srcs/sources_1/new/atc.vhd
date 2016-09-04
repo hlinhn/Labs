@@ -81,10 +81,10 @@ architecture Behavioral of atc is
     signal clr_heavy : std_logic := '0';
     signal cnt_heavy : std_logic_vector (3 downto 0);
     
-    constant CLK_SIZE : integer := 5; 
-    constant BTN_TIME : integer := 1;
+    constant CLK_SIZE : integer := 26; 
+    constant BTN_TIME : integer := 16;
 begin
-    debounce_req : debouncer generic map (N => 1)
+    debounce_req : debouncer generic map (N => 4)
     port map (clk => clk_btn, btn => req, outsig => req_deb);
     
     divider : clock_divider generic map (CLK_SIZE => CLK_SIZE)
