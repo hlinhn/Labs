@@ -39,21 +39,21 @@ entity debouncer is
 end debouncer;
 
 architecture Behavioral of debouncer is
-    signal lastsig, newbtn : std_logic := '0';
+    signal count : std_logic_vector(N - 1 downto 0) := (others => '0');    
+    
 begin
-    process (clk)
-    variable count : std_logic_vector(N - 1 downto 0) := (others => '0');
+    samp : process (clk)
+    variable lastsig : std_logic := '0';
     begin
         if clk'event and clk = '1' then
-            lastsig <= newbtn;
-            newbtn <= btn;
-            if lastsig /= newbtn then
-                count := (others => '0');
-            elsif count (N - 1) = '0' then
-                count := std_logic_vector(unsigned(count) + 1);
+            if lastsig /= btn then
+                count <= (others => '0');
+            elsif count(N - 1) = '0' then
+                count <= std_logic_vector(unsigned(count) + 1);
             else
-               	outsig <= newbtn;
+               	outsig <= btn;
             end if;
+            lastsig := btn;
         end if;
         
                        --with this, occasional dip in the signal is not recorded either 
