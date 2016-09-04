@@ -78,7 +78,8 @@ architecture Behavioral of atc is
     signal clk_btn : std_logic := '0';
     signal hold : std_logic;
     signal req_deb : std_logic;
-    signal req_avail : std_logic := '0';
+    signal old_req : std_logic;
+--    signal req_avail : std_logic := '0';
     
     signal prev_plane : Plane_type;
     
@@ -101,9 +102,9 @@ begin
     divider_2 : clock_divider generic map (CLK_SIZE => BTN_TIME)
     port map (clk => clk, clk_div => clk_btn);
     
-    hold <= '1';
-    pulser : single_pulser 
-    port map (clk => clk_btn, sig_in => req_deb, hold => hold, slow_clk => clk_div, sig_out => req_avail);    
+--    hold <= '1';
+--    pulser : single_pulser 
+--    port map (clk => clk_btn, sig_in => req_deb, hold => hold, slow_clk => clk_div, sig_out => req_avail);    
     type_plane <= heavy when plane = "001" or plane = "011" or plane = "111" else
                   light;                  
                   
@@ -113,8 +114,16 @@ begin
     port map (clk => clk_div, en => en_heavy, clear => clr_heavy, count => cnt_heavy);
     
     proc_req : process (clk_div)
+    variable req_avail : std_logic := '0';
     begin
-        if clk_div'event and clk_div = '1' then                                    
+        if clk_div'event and clk_div = '1' then
+            if req_deb = '1' and old_req = '0' then
+                req_avail := '1';
+            else
+                req_avail := '0';
+            end if;
+            old_req <= req_deb;
+                                                
             case state is
                 when idle =>
                     if req_avail = '1' then

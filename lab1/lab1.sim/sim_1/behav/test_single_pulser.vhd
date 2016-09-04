@@ -45,7 +45,7 @@ architecture Behavioral of test_single_pulser is
     
     signal clk, sig_in, hold, slow_clk, sig_out : std_logic;
     constant clk_p : time := 100 ns;
-    constant clk_s : time := 500 ns;
+    constant clk_s : time := 1600 ns;
 begin
     uut : single_pulser
     port map (clk => clk, sig_in => sig_in, hold => hold, slow_clk => slow_clk, sig_out => sig_out);
@@ -83,6 +83,18 @@ begin
         wait for clk_p * 3;
         sig_in <= '0';
         wait for clk_s * 1.5;
+        sig_in <= '1';
+        wait for clk_p * 3;
+        sig_in <= '0';
+        wait for clk_p * 3;
+        sig_in <= '1';
+        wait for clk_p * 3;
+        sig_in <= '0';
+        wait for clk_p * 15;
+        sig_in <= '1';
+        wait for clk_p * 3;
+        sig_in <= '0';
+        wait for clk_p * 31;
         sig_in <= '1';
         wait for clk_p * 3;
         sig_in <= '0';
