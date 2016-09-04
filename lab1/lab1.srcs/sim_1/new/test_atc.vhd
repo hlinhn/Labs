@@ -47,7 +47,7 @@ architecture Behavioral of test_atc is
     signal acc : std_logic_vector (1 downto 0);
     constant clk_p : time := 100 ns;
     constant clk_period : time := 400 ns;
-    constant clk_period_1hz : time := 1600 ns;
+    constant clk_period_1hz : time := 6400 ns;
 begin
     uut : atc port map (
         clk => clk,
@@ -66,37 +66,37 @@ begin
     sim_process: process
     begin
         req <= '0'; wait for (3 * clk_period);
-        plane<="000"; req <= '1'; wait for (3 * clk_period); 
-        req <= '0'; wait for (3 * clk_period_1hz); --1 --test reset(light)
+        plane<="000"; req <= '1'; wait for (3 * clk_period + clk_period_1hz); 
+        req <= '0'; wait for (2 * clk_period_1hz); --1 --test reset(light)
         
-        plane<="000"; req <= '1'; wait for (3 * clk_period); 
-        req <= '0'; wait for (1 * clk_period_1hz); --1 --test 3s(light)
+        plane<="000"; req <= '1'; wait for (3 * clk_period + 0.5 * clk_period_1hz); 
+        req <= '0'; wait for (0.5 * clk_period_1hz); --1 --test 3s(light)
         
         plane<="000"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (2 * clk_period_1hz); --0 --test 3s(light)
         
-        plane<="001"; req <= '1'; wait for (3 * clk_period); 
+        plane<="001"; req <= '1'; wait for (5 * clk_period); 
         req <= '0'; wait for (2 * clk_period_1hz); --1 --test 3s(heavy)
         
         plane<="001"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (1 * clk_period_1hz); --0 --test 3s(heavy)
         
-        plane<="001"; req <= '1'; wait for (4 * clk_period); 
+        plane<="001"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (2 * clk_period_1hz); --1 --reset
         
-        plane<="001"; req <= '1'; wait for (4 * clk_period); 
+        plane<="001"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (1 * clk_period_1hz); --0 --test 3s(heavy)//repeated
         
-        plane<="000"; req <= '1'; wait for (4 * clk_period); 
+        plane<="000"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (9 * clk_period_1hz); --0 --test 13s (heavy->light)
         
-        plane<="000"; req <= '1'; wait for (4 * clk_period); 
+        plane<="000"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (1 * clk_period_1hz); --1 --test 13s (heavy->light)
         
-        plane<="000"; req <= '1'; wait for (4 * clk_period); 
+        plane<="000"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (2 * clk_period_1hz); --1 --test (light-light)
         
-        plane<="000"; req <= '1'; wait for (4 * clk_period); 
+        plane<="000"; req <= '1'; wait for (3 * clk_period); 
         req <= '0'; wait for (3 * clk_period_1hz); --0 --test (light-light)
         wait; 
     end process;

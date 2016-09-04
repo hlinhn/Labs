@@ -39,29 +39,26 @@ entity debounce is
 end debounce;
 
 architecture Behavioral of debounce is
-signal count: STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+    signal count: STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
 begin
-process(clk)
-
-begin
-if(clk'event and clk='1') then
-    if(clk_slow = '1') then
-        if(press = '1')then
-            if(count/=10) then
-            count <= count + 1;
-            end if;
-            else
-            count<= (others=>'0');
-        end if;
+    process(clk)
+    begin
+        if(clk'event and clk='1') then
+            if(clk_slow = '1') then
+                if (press = '1') then
+                    if(count /= 10) then
+                        count <= count + 1;
+                    end if;
+                else
+                    count <= (others=>'0');
+                end if;
         
-        if(count = 10)then
-            refined_press <= '1';
-            else
-            refined_press <= '0';
+                if (count = 10) then
+                    refined_press <= '1';
+                else
+                    refined_press <= '0';
+                end if;
+            end if;
         end if;
-    end if;
-    end if;
-end process;
-
-    
+    end process;
 end Behavioral;
