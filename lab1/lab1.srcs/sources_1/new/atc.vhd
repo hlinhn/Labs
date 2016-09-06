@@ -123,7 +123,7 @@ begin
                             state <= idle;
                         end if;
                     when busy =>
-                        if unsigned(cnt_busy) < 2 then
+                        if unsigned(cnt_busy) < 3 then
                             state <= busy; --display for 3 seconds
                         else
                             en_busy <= '0'; --stop the counter
@@ -132,7 +132,7 @@ begin
                             if prev_plane = light then
                                 state <= idle; --can accept any request
                             else --cannot accept all requests
-                                if unsigned(cnt_heavy) < 9 then --have not passed the safe time
+                                if unsigned(cnt_heavy) < 10 then --have not passed the safe time
                                     state <= heavy_busy;
                                     en_heavy <= '1'; --continue counting
                                     clr_heavy <= '0';
@@ -144,7 +144,7 @@ begin
                             end if;
                         end if;                        
                     when heavy_busy =>
-                        if unsigned(cnt_heavy) < 9 then
+                        if unsigned(cnt_heavy) < 10 then
                             state <= heavy_busy;
                         else
                             en_heavy <= '0';
