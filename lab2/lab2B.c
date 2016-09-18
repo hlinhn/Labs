@@ -61,7 +61,7 @@ int main()
     }
     accout[pos] = '\n';
     accout[pos+1] = '\0';
-    printf("%s", accout);
+    //    printf("%s", accout);
     return 0;
 }
 
