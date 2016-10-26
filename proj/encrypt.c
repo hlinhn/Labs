@@ -15,7 +15,7 @@ void convertToChar(unsigned int num, char *number, int size);
 //read key
 //read files, supposed to be able to break down the file into segments of 16 bytes, but for testing purpose we go with converting to number first
 void readFile (unsigned int *buffer) {
-  char buf[ROW*COL*2 + 1] = {0};
+  char buf[ROW*COL*2] = {0};
   scanf("%s", buf);
   
   for (int i = 0; i < COL * ROW; i++) {
@@ -26,6 +26,7 @@ void readFile (unsigned int *buffer) {
   }
 }
 
+//send back decrypted fragment
 void writeOut (unsigned int *buffer) {
   for (int i = 0; i < COL * ROW; i++) {
     char temp[2];
@@ -86,9 +87,6 @@ unsigned int mult (int num, int times) {
   }
   return acc;
 }
-
-//collect decrypted segments
-//send back
 
 /********************************************************************/
 
@@ -223,7 +221,8 @@ unsigned int multTwo (unsigned int num) {
   return (((num << 1) ^ (num & 0x80 ? 27 : 0)) & 0xff);
 }
 
-//mix columns: hard coded some operations, for example *9?
+//mix columns: multiplying takes 4*3 + 8 = 20 instructions per number
+//look up using log table takes around 4~5 -- consider switching
 void mixCol (unsigned int *mes) {
   int op[ROW][COL] = {{3, 1, 2, 0}, {0, 3, 1, 2},
 		      {2, 0, 3, 1}, {1, 2, 0, 3}};
@@ -271,8 +270,7 @@ void addRound (unsigned int *mes, unsigned int *key) {
   }
 }
 
-void decrypt (unsigned int *mes, unsigned int *key) {
-  expandKey(key);
+void decrypt (unsigned int *mes) {
   for (int i = 1; i < 11; i++) {
     if (i == 1) {
       addRound(mes, keys[10]);
@@ -294,8 +292,11 @@ int main(void) {
   unsigned int buffer[ROW * COL];
   unsigned int key[ROW*COL];
   readFile(key);
-  readFile(buffer);
-  decrypt(buffer, key);
-  writeOut(buffer);
+  expandKey(key);
+  while (1) {
+    readFile(buffer);
+    decrypt(buffer);
+    writeOut(buffer);
+  }
   return 0;
 }
