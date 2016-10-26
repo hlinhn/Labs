@@ -11,6 +11,7 @@ unsigned int mult(int num, int times);
 void convertToChar(unsigned int num, char *number, int size);
 
 /**************************INPUT-OUTPUT****************************/
+//NOTE: need a lot of changes here, this is for testing purpose
 //break down into 16 bytes segments
 //read key
 //read files, supposed to be able to break down the file into segments of 16 bytes, but for testing purpose we go with converting to number first
@@ -223,6 +224,7 @@ unsigned int multTwo (unsigned int num) {
 
 //mix columns: multiplying takes 4*3 + 8 = 20 instructions per number
 //look up using log table takes around 4~5 -- consider switching
+//if using log table, it is also possible to get rid of the sbox and inverse sbox, of course at the cost of more instructions 
 void mixCol (unsigned int *mes) {
   int op[ROW][COL] = {{3, 1, 2, 0}, {0, 3, 1, 2},
 		      {2, 0, 3, 1}, {1, 2, 0, 3}};
@@ -293,10 +295,9 @@ int main(void) {
   unsigned int key[ROW*COL];
   readFile(key);
   expandKey(key);
-  while (1) {
-    readFile(buffer);
-    decrypt(buffer);
-    writeOut(buffer);
-  }
+  readFile(buffer);
+  decrypt(buffer);
+  writeOut(buffer);
+
   return 0;
 }
