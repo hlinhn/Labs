@@ -56,16 +56,18 @@ architecture Behavioral of sbox is
     numOut : out std_logic_vector (7 downto 0));
   end component inverter;
   
-  signal numNewBase, numInverted, numXor : std_logic_vector (7 downto 0);                      
+  signal numNewBase, numInverted, numXor, numInput : std_logic_vector (7 downto 0);                      
   signal switchBase, affine : std_logic_vector (1 downto 0);
                       
 begin
-  switchBase <= "01" when inv = '0' else "00";
-  affine <= "10" when inv = '0' else "11";
-  numOut <= numXor xor x"63";   
+  switchBase <= "01" when inv = '0' else "11";
+  affine <= "10" when inv = '0' else "00";
+  numInput <= numIn when inv = '0' else (numIn xor x"63");
+  numOut <= numXor xor x"63" when inv = '0' else numXor;   
+  
   --port maps
   basis_change_forward : basis_change port map(
-    numIn => numIn,
+    numIn => numInput,
     switch => switchBase,
     numOut => numNewBase);
   basis_change_back : basis_change port map (
